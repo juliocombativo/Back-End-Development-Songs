@@ -51,3 +51,13 @@ def parse_json(data):
 ######################################################################
 # INSERT CODE HERE
 ######################################################################
+
+@app.route("/health")
+def health():
+    return jsonify(dict(status="OK")), 200
+
+@app.route("/count")
+def count():
+    """return the number of songs on the db"""
+    count = db.songs.count_documents({})
+    return jsonify(dict(count=count)), 200
