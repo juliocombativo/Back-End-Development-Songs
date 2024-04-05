@@ -65,15 +65,15 @@ def count():
 @app.route("/song", methods=["GET"])
 def songs():
     """Query all the songs on the db"""
-    all_songs = json_util.dumps(db.songs.find())
-    return jsonify({songs:all_songs}), 200
+    all_songs = db.songs.find({})
+    return jsonify({songs:parse_json(all_songs)}), 200
 
 @app.route("/song/<int:id>", methods=["GET"])
 def get_song_by_id(id):
     """Query for the song with the given ID from the db"""
     song = db.songs.find_one({"id":id})
     if song:
-        return json_util.dumps(song), 200
+        return parse_json(song), 200
     return {"message": "song with id not found"}, 404
 
 @app.route("/song", methods=["POST"])
@@ -84,8 +84,7 @@ def create_song():
     if found_song:
         return {"Message": f"song with id {song['id']} already present"}, 302
     inserted = db.songs.insert_one(song)
-    res = {"inserted id": {"$oid": str(inserted.inserted_id)}}
-    return jsonify(res), 201
+    return {"inserted id": {"$oid": str(inserted.inserted_id)}}, 201
 
 @app.route("/song/<int:id>", methods=["PUT"])
 def update_song(id):
