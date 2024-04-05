@@ -66,7 +66,7 @@ def count():
 def songs():
     """Query all the songs on the db"""
     all_songs = db.songs.find({})
-    return jsonify({songs:parse_json(all_songs)}), 200
+    return {songs:parse_json(all_songs)}, 200
 
 @app.route("/song/<int:id>", methods=["GET"])
 def get_song_by_id(id):
